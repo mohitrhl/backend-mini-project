@@ -42,8 +42,9 @@ public class PageController {
     }
 
     @PostMapping("/view-result-action")
-    public String viewResult(@Valid @ModelAttribute RequestResultForm requestResultForm, BindingResult bindingResult, Model model
-
+    public String viewResult(@Valid @ModelAttribute RequestResultForm requestResultForm,
+                             BindingResult bindingResult,
+                             Model model
     ) {
 
         if (bindingResult.hasErrors()) {
@@ -51,7 +52,8 @@ public class PageController {
         }
 
         //result fetch and then view send
-        Optional<Student> optionalStudent = studentRepo.findByRollNumberAndDateOfBirth(requestResultForm.getRollNumber(), requestResultForm.getDateOfBirth());
+        Optional<Student> optionalStudent = studentRepo.findByRollNumberAndDateOfBirth(requestResultForm.getRollNumber(),
+                requestResultForm.getDateOfBirth());
         if (optionalStudent.isEmpty()) {
             return "redirect:/view-result?message=Student not found ";
         }
@@ -60,7 +62,6 @@ public class PageController {
         List<Mark> marks = student.getMarks();
 
         //calculate total of the marks result:
-
 
         AtomicReference<Double> totalMarks = new AtomicReference<>(0.0);
         AtomicReference<Double> totalMaxMarks = new AtomicReference<>(0.0);
@@ -72,7 +73,7 @@ public class PageController {
         });
 
         double percentage = (totalMarks.get() / totalMaxMarks.get()) * 100;
-        boolean passed = percentage > 60 ? true : false;
+        boolean passed = percentage > 40 ? true : false;
         model.addAttribute("student", student);
         model.addAttribute("marks", marks);
         model.addAttribute("percentage", percentage);
@@ -80,7 +81,6 @@ public class PageController {
         model.addAttribute("totalMaxMarks", totalMaxMarks.get());
         model.addAttribute("passed", passed);
         model.addAttribute("currentDate", LocalDate.now().toString());
-
 
         return "view_result";
     }

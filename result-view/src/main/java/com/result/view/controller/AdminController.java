@@ -64,8 +64,6 @@ public class AdminController {
             BindingResult bindingResult,
             Model model
     ) {
-
-
         if (bindingResult.hasErrors()) {
             List<String> standardOptions = new ArrayList<>();
             standardOptions.add("CLASS 1");
@@ -79,17 +77,18 @@ public class AdminController {
         }
 
 
-//        convert student form to student entity
+//      convert student form to student entity
 
         Student student = modelMapper.map(studentForm, Student.class);
 
-        //har marks to attach student
+//      har marks to attach kiya hai student se
+
         List<Mark> updatedList = student.getMarks().stream().map(mark -> {
             mark.setStudent(student);
             return mark;
         }).toList();
 
-        //update student list
+//      update student list
         student.setMarks(updatedList);
 
         student.setId(UUID.randomUUID().toString());

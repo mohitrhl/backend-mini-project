@@ -3,6 +3,8 @@ package com.result.view.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -28,7 +30,8 @@ public class StudentForm {
     private String photoName;
     @NotBlank(message = "Standard is required !")
     private String standard;
-    @NotBlank(message = "DOB is required !")
+    @NotNull(message = "DOB is required !")
+    @Past(message = "DOB must be in the past")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
     @NotBlank(message = "Father Name is required !")

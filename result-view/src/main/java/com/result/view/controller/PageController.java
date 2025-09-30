@@ -44,41 +44,40 @@ public class PageController {
     @PostMapping("/view-result-action")
     public String viewResult(@Valid @ModelAttribute RequestResultForm requestResultForm,
                              BindingResult bindingResult,
-                             Model model
-    ) {
+                             Model model) {
 
         if (bindingResult.hasErrors()) {
             return "view_result_form";
         }
 
-        //result fetch and then view send
-        Optional<Student> optionalStudent = studentRepo.findByRollNumberAndDateOfBirth(requestResultForm.getRollNumber(),
-                requestResultForm.getDateOfBirth());
+        Optional<Student> optionalStudent = studentRepo.findByRollNumberAndDateOfBirth(
+                requestResultForm.getRollNumber(),
+                requestResultForm.getDateOfBirth()
+        );
+
         if (optionalStudent.isEmpty()) {
-            return "redirect:/view-result?message=Student not found ";
+            return "redirect:/view-result?message=Student not found";
         }
 
         Student student = optionalStudent.get();
         List<Mark> marks = student.getMarks();
 
-        //calculate total of the marks result:
+        double totalMarks = 0.0;
+        double totalMaxMarks = 0.0;
 
-        AtomicReference<Double> totalMarks = new AtomicReference<>(0.0);
-        AtomicReference<Double> totalMaxMarks = new AtomicReference<>(0.0);
+        for (Mark mark : marks) {
+            totalMarks += mark.getMarks() != null ? mark.getMarks() : 0.0;
+            totalMaxMarks += mark.getMaxMarks() != null ? mark.getMaxMarks() : 0.0;
+        }
 
-        marks.forEach(mark ->
-        {
-            totalMarks.set(totalMarks.get() + Double.parseDouble(mark.getMarks()));
-            totalMaxMarks.set(totalMaxMarks.get() + Double.parseDouble(mark.getMaxMarks()));
-        });
+        double percentage = totalMaxMarks > 0 ? (totalMarks / totalMaxMarks) * 100 : 0.0;
+        boolean passed = percentage > 40;
 
-        double percentage = (totalMarks.get() / totalMaxMarks.get()) * 100;
-        boolean passed = percentage > 40 ? true : false;
         model.addAttribute("student", student);
         model.addAttribute("marks", marks);
         model.addAttribute("percentage", percentage);
-        model.addAttribute("totalMarks", totalMarks.get());
-        model.addAttribute("totalMaxMarks", totalMaxMarks.get());
+        model.addAttribute("totalMarks", totalMarks);
+        model.addAttribute("totalMaxMarks", totalMaxMarks);
         model.addAttribute("passed", passed);
         model.addAttribute("currentDate", LocalDate.now().toString());
 

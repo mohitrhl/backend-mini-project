@@ -18,8 +18,8 @@ public class Mark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String subjectName;
-    private String marks;
-    private String maxMarks;
+    private Double marks;
+    private Double maxMarks;
     private String feedback;
     private String grade;
 

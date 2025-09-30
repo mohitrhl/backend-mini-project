@@ -9,8 +9,8 @@ import lombok.*;
 @Builder
 public class MarksForm {
     private String subjectName;
-    private String marks;
-    private String maxMarks;
+    private Double marks;
+    private Double maxMarks;
     private String feedback;
     private String grade;
 
